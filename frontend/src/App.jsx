@@ -4,7 +4,8 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
-import "./App.css";
+import { ChefHat, Home as HomeIcon, BookOpen, LogOut, LogIn, UserPlus } from "lucide-react";
+import "./assets/css/App.css";
 
 function Navigation({ isLoggedIn, onLogout }) {
   const location = useLocation();
@@ -16,31 +17,38 @@ function Navigation({ isLoggedIn, onLogout }) {
 
   return (
     <nav className="navbar">
-      <div className="container">
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <h1>🍽️ Recipe Generator</h1>
+      <div className="nav-container">
+        <Link to="/" className="nav-logo">
+          <ChefHat size={32} />
+          <span>Recipe Generator</span>
         </Link>
-        <div>
+        <div className="nav-links">
           {isLoggedIn ? (
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <Link to="/">🏠 Home</Link>
-              <Link to="/recipes">📚 My Recipes</Link>
-              <button 
-                onClick={onLogout}
-                style={{ 
-                  background: 'rgba(255, 255, 255, 0.2)', 
-                  padding: '0.5rem 1rem',
-                  fontSize: '0.9rem'
-                }}
-              >
-                🚪 Logout
+            <>
+              <Link to="/" className="nav-link">
+                <HomeIcon size={18} />
+                Home
+              </Link>
+              <Link to="/recipes" className="nav-link">
+                <BookOpen size={18} />
+                My Recipes
+              </Link>
+              <button onClick={onLogout} className="nav-button">
+                <LogOut size={18} />
+                Logout
               </button>
-            </div>
+            </>
           ) : (
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <Link to="/login">🚀 Login</Link>
-              <Link to="/register">🎯 Register</Link>
-            </div>
+            <>
+              <Link to="/login" className="nav-link">
+                <LogIn size={18} />
+                Login
+              </Link>
+              <Link to="/register" className="nav-link-primary">
+                <UserPlus size={18} />
+                Register
+              </Link>
+            </>
           )}
         </div>
       </div>
@@ -49,13 +57,11 @@ function Navigation({ isLoggedIn, onLogout }) {
 }
 
 function AppContent() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // Check if user is logged in on component mount
+  // Initialize state based on localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-  }, []);
+    return !!token;
+  });
 
   const handleLogout = () => {
     localStorage.removeItem('token');
